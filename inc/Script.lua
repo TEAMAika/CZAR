@@ -1239,7 +1239,7 @@ end
 
 if MsgText[1] == "ضع اسم" then
 if not msg.Creator then return "♦️*│*هذا الامر يخص {المطور,المنشئ} فقط  \n💥" end
-redis:set(CZAR..'name:witting'..msg.chat_id_,300,true)
+redis:setex(CZAR..'name:witting'..msg.chat_id_..msg.sender_user_id_,300,true)
 return "📭╿حسننا عزيزي  ✋🏿\n🗯╽الان ارسل الاسم  للمجموعه \n🛠"
 end
 
@@ -3416,8 +3416,8 @@ redis:del(CZAR..'rulse:witting'..msg.sender_user_id_)
 redis:set(CZAR..'rulse:msg'..msg.chat_id_,Flter_Markdown(msg.text)) 
 return sendMsg(msg.chat_id_,msg.id_,'📜*╿* مرحبآ عزيزي\n📦│تم حفظ القوانين بنجاح ✓\n🔖╽ارسل [[ القوانين ]] لعرضها \n💬✓')
 end
-if redis:get(CZAR..'name:witting'..msg.chat_id_) then --- استقبال الاسم
-redis:del(CZAR..'name:witting'..msg.sender_user_id_) 
+if redis:get(CZAR..'name:witting'..msg.chat_id_..msg.sender_user_id_) then --- استقبال الاسم
+redis:del(CZAR..'name:witting'..msg.chat_id_..msg.sender_user_id_) 
 tdcli_function({ID= "ChangeChatTitle",chat_id_=msg.chat_id_,title_=msg.text},dl_cb,nil)
 end
 if redis:get(CZAR..'linkGroup'..msg.sender_user_id_,link) then --- استقبال الرابط
