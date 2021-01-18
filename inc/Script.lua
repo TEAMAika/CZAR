@@ -1639,12 +1639,12 @@ end,nil)
 return false
 end
 
-if (MsgText[1] == "فتح الفشار" and is_JoinChannel(msg)) 		then return unlock_mmno3(msg) end 
-if (MsgText[1] == "قفل الفشار" and is_JoinChannel(msg))		then return lock_mmno3(msg) end 
-if (MsgText[1] == "فتح الفارسيه" and is_JoinChannel(msg))		then  return unlock_pharsi(msg) end 
-if (MsgText[1] == "قفل الفارسيه" and is_JoinChannel(msg))		then return lock_pharsi(msg) end 
-if (MsgText[1] == "فتح الانكليزيه" and is_JoinChannel(msg))		then  return unlock_enhso(msg) end 
-if (MsgText[1] == "قفل الانكليزيه" and is_JoinChannel(msg))		then return lock_enhso(msg) end 
+if MsgText[1] == "فتح الفشار"	then return unlock_mmno3(msg) end 
+if MsgText[1] == "قفل الفشار"		then return lock_mmno3(msg) end 
+if MsgText[1] == "فتح الفارسيه"   then  return unlock_pharsi(msg) end 
+if MsgText[1] == "قفل الفارسيه"		then return lock_pharsi(msg) end 
+if MsgText[1] == "فتح الانكليزيه" 		then  return unlock_enhso(msg) end 
+if MsgText[1] == "قفل الانكليزيه" 		then return lock_enhso(msg) end 
 if MsgText[1] == "تفعيل تعيين الايدي" or MsgText[1] =="تفعيل تعيين الايدي ⌨️" 	then return unlock_idediit(msg) end 
 if MsgText[1] == "تعطيل تعيين الايدي" or MsgText[1] =="تعطيل تعيين الايدي ⚔️" 	then return lock_idediit(msg) end 
 
