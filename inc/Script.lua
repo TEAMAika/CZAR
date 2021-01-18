@@ -985,8 +985,10 @@ if MsgText[2] == "البوتات بالطرد" 	then return lock_bots_by_kick(ms
 if MsgText[2] == "الماركدوان" 	then return lock_markdown(msg) end
 if MsgText[2] == "الويب" 		then return lock_webpage(msg) end 
 if MsgText[2] == "التثبيت" 		then return lock_pin(msg) end 
+if MsgText[2] == "الفشار"		then return lock_mmno3(msg) end 
+if MsgText[2] == "الفارسيه"		then return lock_pharsi(msg) end 
+if MsgText[2] == "الانكليزيه" 		then return lock_enhso(msg) end 
 end
-
 --{ Commands For Unlocks }
 if (MsgText[1] == "فتح" and is_JoinChannel(msg)) 		then 
 if MsgText[2] == "الكل" then return Unlock_All(msg) end
@@ -1021,6 +1023,9 @@ if MsgText[2] == "البوتات بالطرد" 	then return unlock_bots_by_kick(
 if MsgText[2] == "الماركدوان" 	then return unlock_markdown(msg) end
 if MsgText[2] == "الويب" 		then return unlock_webpage(msg) 	end
 if MsgText[2] == "التثبيت" 		then return unlock_pin(msg) end 
+if MsgText[2] == "الفشار"	then return unlock_mmno3(msg) end 
+if MsgText[2] == "الفارسيه"   then  return unlock_pharsi(msg) end 
+if MsgText[2] == "الانكليزيه" 		then  return unlock_enhso(msg) end 
 end
  
 if MsgText[1] == "انشاء رابط" then
@@ -1639,12 +1644,6 @@ end,nil)
 return false
 end
 
-if MsgText[1] == "فتح الفشار"	then return unlock_mmno3(msg) end 
-if MsgText[1] == "قفل الفشار"		then return lock_mmno3(msg) end 
-if MsgText[1] == "فتح الفارسيه"   then  return unlock_pharsi(msg) end 
-if MsgText[1] == "قفل الفارسيه"		then return lock_pharsi(msg) end 
-if MsgText[1] == "فتح الانكليزيه" 		then  return unlock_enhso(msg) end 
-if MsgText[1] == "قفل الانكليزيه" 		then return lock_enhso(msg) end 
 if MsgText[1] == "تفعيل تعيين الايدي" or MsgText[1] =="تفعيل تعيين الايدي ⌨️" 	then return unlock_idediit(msg) end 
 if MsgText[1] == "تعطيل تعيين الايدي" or MsgText[1] =="تعطيل تعيين الايدي ⚔️" 	then return lock_idediit(msg) end 
 
