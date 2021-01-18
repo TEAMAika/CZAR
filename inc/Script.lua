@@ -616,22 +616,27 @@ if UserID == SUDO_ID then
 rinkuser = 1
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 rinkuser = 2
-elseif redis:sismember(CZAR..':MONSHA_Group:'..msg.chat_id_,UserID) then 
+elseif redis:sismember(CZAR..':MALK_GR:',UserID) then 
 rinkuser = 3
-elseif redis:sismember(CZAR..':MONSHA_BOT:'..msg.chat_id_,UserID) then 
+elseif redis:sismember(CZAR..':MONSHA_Group:'..msg.chat_id_,UserID) then 
 rinkuser = 4
-elseif redis:sismember(CZAR..'owners:'..msg.chat_id_,UserID) then 
+elseif redis:sismember(CZAR..':MONSHA_BOT:'..msg.chat_id_,UserID) then 
 rinkuser = 5
-elseif redis:sismember(CZAR..'admins:'..msg.chat_id_,UserID) then 
+elseif redis:sismember(CZAR..'owners:'..msg.chat_id_,UserID) then 
 rinkuser = 6
-elseif redis:sismember(CZAR..'whitelist:'..msg.chat_id_,UserID) then 
+elseif redis:sismember(CZAR..'admins:'..msg.chat_id_,UserID) then 
 rinkuser = 7
-else
+elseif redis:sismember(CZAR..'whitelist:'..msg.chat_id_,UserID) then 
 rinkuser = 8
+else
+rinkuser = 9
 end
 local DonisDown = "\n📛¦ تم تنزيله من الرتب الاتيه : \n\n "
 if redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 DonisDown = DonisDown.."❌¦ تم تنزيله من المطور ✓️\n"
+end 
+if redis:sismember(CZAR..':MALK_GR:'..msg.chat_id_,UserID) then 
+DonisDown = DonisDown.."❌¦ تم تنزيله من المالك ✓️\n"
 end 
 if redis:sismember(CZAR..':KARA_BOT:'..msg.chat_id_,UserID) then 
 DonisDown = DonisDown.."❌¦ تم تنزيله من المنشئ الاساسي ✓️\n"
@@ -655,6 +660,7 @@ if rinkuser == 8 then return sendMsg(msg.chat_id_,msg.id_,"📮¦ المستخد
 huk = false
 if msg.SudoBase then 
 redis:srem(CZAR..':SUDO_BOT:',UserID)
+redis:srem(CZAR..':MALK_GR:'..msg.chat_id_,UserID)
 redis:srem(CZAR..':KARA_BOT:'..msg.chat_id_,UserID)
 redis:srem(CZAR..':MONSHA_BOT:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'owners:'..msg.chat_id_,UserID)
@@ -663,33 +669,41 @@ redis:srem(CZAR..'whitelist:'..msg.chat_id_,UserID)
 elseif msg.SudoUser then 
 if rinkuser == 2 then return sendpluse() end
 if rinkuser < 2 then return senddwon() end
+redis:srem(CZAR..':MALK_GR:'..msg.chat_id_,UserID)
+redis:srem(CZAR..':KARA_BOT:'..msg.chat_id_,UserID)
+redis:srem(CZAR..':MONSHA_BOT:'..msg.chat_id_,UserID)
+redis:srem(CZAR..'owners:'..msg.chat_id_,UserID)
+redis:srem(CZAR..'admins:'..msg.chat_id_,UserID)
+redis:srem(CZAR..'whitelist:'..msg.chat_id_,UserID)
+elseif msg.malk then 
+if rinkuser == 3 then return sendpluse() end
+if rinkuser < 3 then return senddwon() end
 redis:srem(CZAR..':KARA_BOT:'..msg.chat_id_,UserID)
 redis:srem(CZAR..':MONSHA_BOT:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'owners:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'admins:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'whitelist:'..msg.chat_id_,UserID)
 elseif msg.Kara then 
-if rinkuser == 3 then return sendpluse() end
-if rinkuser < 3 then return senddwon() end
+if rinkuser == 4 then return sendpluse() end
+if rinkuser < 5 then return senddwon() end
 redis:srem(CZAR..':MONSHA_BOT:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'owners:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'admins:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'whitelist:'..msg.chat_id_,UserID)
 elseif msg.Creator then 
-if rinkuser == 4 then return sendpluse() end
+if rinkuser == 5 then return sendpluse() end
 if rinkuser < 5 then return senddwon() end
-redis:srem(CZAR..'owners:'..msg.chat_id_,UserID)
+redis:srem(CZAR..':owners:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'admins:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'whitelist:'..msg.chat_id_,UserID)
 elseif msg.Director then 
-if rinkuser == 5 then return sendpluse() end
-if rinkuser < 5 then return senddwon() end
-redis:srem(CZAR..'admins:'..msg.chat_id_,UserID)
+if rinkuser == 6 then return sendpluse() end
+if rinkuser < 6 then return senddwon() end
+redis:srem(CZAR..':admins:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'whitelist:'..msg.chat_id_,UserID)
 elseif msg.Admin then 
 if rinkuser == 6 then return sendpluse() end
 if rinkuser < 6 then return senddwon() end
-redis:srem(CZAR..'admins:'..msg.chat_id_,UserID)
 redis:srem(CZAR..'whitelist:'..msg.chat_id_,UserID)
 else
 huk = true
