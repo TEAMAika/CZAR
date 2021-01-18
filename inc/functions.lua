@@ -642,6 +642,8 @@ elseif  UserID == SUDO_ID then
 var = 'مطور اساسي 👨🏻‍✈️' 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then
 var = 'مطور البوت 👨🏽‍💻' 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then
+var = ' المالك 👨‍💼' 
 elseif redis:sismember(CZAR..':KARA_BOT:'..ChatID,UserID) then
 var = ' المنشىء الاساسي👷🏽' 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then
@@ -785,6 +787,22 @@ function GetListAdmin(msg)
 local list = redis:smembers(CZAR..'admins:'..msg.chat_id_)
 if #list==0 then  return  "♦️*│* لا يوجد ادمن في هذه المجموعه \n❕" end
 message = '📋*│ قائمه الادمنيه :*\n\n'
+for k,v in pairs(list) do
+local info = redis:hgetall(CZAR..'username:'..v)
+if info and info.username and info.username:match("@[%a%d_]+") then
+message = message ..k.. '~⪼ '..(info.username or '')..' » ❪`' ..v.. '`❫ \n'
+else
+message = message ..k.. '~⪼ '..(info.username or '')..' l » ❪`' ..v.. '`❫ \n'
+end
+end
+send_msg(msg.chat_id_,message,msg.id_)
+return false
+end
+
+function GetListmalk(msg)
+local list = redis:smembers(CZAR..'MALK_GR:'..msg.chat_id_)
+if #list==0 then  return  "♦️*│* لا يوجد مالك في هذه المجموعه \n❕" end
+message = '📋*│ قائمه المالك :*\n\n'
 for k,v in pairs(list) do
 local info = redis:hgetall(CZAR..'username:'..v)
 if info and info.username and info.username:match("@[%a%d_]+") then
@@ -1019,6 +1037,25 @@ json_data =  json_data..'}'
 end
 
 
+local malk = redis:smembers(CZAR..':MALK_GR:'..GroupS)
+if #malk ~= 0 then
+json_data =  json_data..',"hso" : {'
+for key,value in pairs(malk) do
+local info = redis:hgetall(CZAR..'username:'..value)
+if info then 
+UserName_ = (info.username or "")
+UserName_ = UserName_:gsub([[\]],'')
+UserName_ = UserName_:gsub('"','')
+end 
+if key == 1 then
+json_data =  json_data..'"'..UserName_..'":'..value
+else
+json_data =  json_data..',"'..UserName_..'":'..value
+end 
+end
+json_data =  json_data..'}'
+end
+
 local creator = redis:smembers(CZAR..':KARA_BOT:'..GroupS)
 if #creator ~= 0 then
 json_data =  json_data..',"Kara" : {'
@@ -1215,7 +1252,7 @@ for k,v in pairs(data.members_) do
 if data.members_[k].status_.ID == "ChatMemberStatusCreator" then
 GetUserID(v.user_id_,function(arg,data)
 redis:hset(CZAR..'username:'..data.id_, 'username', ResolveUser(data))
-redis:sadd(CZAR..':KARA_BOT:'..msg.chat_id_,data.id_)
+redis:sadd(CZAR..':MALK_GR:'..msg.chat_id_,data.id_)
 end)
 elseif lock_service and not data.members_[k].bot_info_ and data.members_[k].status_.ID == "ChatMemberStatusEditor" then
 GetUserID(v.user_id_,function(arg,data)
@@ -1323,6 +1360,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك تقييد المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك تقييد المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك تقييد المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك تقييد المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -1394,6 +1433,30 @@ return SendMention(ChatID,UserID,MsgID,'🙍🏻‍♂╿العضو » ❪ '..US
 end
 redis:srem(CZAR..':KARA_BOT:'..ChatID,UserID)
 return SendMention(ChatID,UserID,MsgID,'🙍🏻‍♂╿العضو » ❪ '..USERNAME..' ❫\n🎫│الايدي » ❪ '..UserID..' ❫\n💯╽تم تنزيله من المنشىء الاساسي\n✓️',17,USERCAR) 
+end
+
+if cmd == "setmalk" then
+if UserID == our_id then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*عذرا لا يمكنني رفع نفسي \n📛") 
+elseif data.type_.ID  == "UserTypeBot" then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*عذرا لا يمكن رفع بوت في البوت \n📛") 
+elseif data.type_.ID == "chatTypeChannel" then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*عذرا لا يمكن رفع قناة في البوت \n📛") 
+end
+if redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return SendMention(ChatID,UserID,MsgID,'🙍🏻‍♂╿العضو » ❪ '..USERNAME..' ❫\n🎫│الايدي » ❪ '..UserID..' ❫\n💯╽انه بالتأكيد مالك \n✓️',17,USERCAR) 
+end
+redis:hset(CZAR..'username:'..UserID,'username',Resolv)
+redis:sadd(CZAR..':MALK_GR:'..ChatID,UserID)
+return SendMention(ChatID,UserID,MsgID,'🙍🏻‍♂╿العضو » ❪ '..USERNAME..' ❫\n🎫│الايدي » ❪ '..UserID..' ❫\n💯╽تمت ترقيته ليصبح مالك في البوت \n✓️',17,USERCAR) 
+end
+
+if cmd == "remmalk" then
+if not redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then
+return SendMention(ChatID,UserID,MsgID,'🙍🏻‍♂╿العضو » ❪ '..USERNAME..' ❫\n🎫│الايدي » ❪ '..UserID..' ❫\n💯╽انه بالتأكيد ليس مالك\n✓️',17,USERCAR) 
+end
+redis:srem(CZAR..':MALK_GR:'..ChatID,UserID)
+return SendMention(ChatID,UserID,MsgID,'🙍🏻‍♂╿العضو » ❪ '..USERNAME..' ❫\n🎫│الايدي » ❪ '..UserID..' ❫\n💯╽تم تنزيله من المالك\n✓️',17,USERCAR) 
 end
 
 if cmd == "setwhitelist" then
@@ -1490,6 +1553,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -1528,6 +1593,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -1581,6 +1648,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -1834,6 +1903,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -1878,6 +1949,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -1933,6 +2006,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -2004,6 +2079,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك تقييد المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -2115,6 +2192,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك حظر المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -2138,6 +2217,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 
@@ -2177,6 +2258,8 @@ elseif UserID == SUDO_ID then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المطور\n🛠") 
+elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المالك\n🛠") 
 elseif redis:sismember(CZAR..':MONSHA_BOT:'..ChatID,UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المنشئ\n🛠") 
 elseif redis:sismember(CZAR..'owners:'..ChatID,UserID) then 

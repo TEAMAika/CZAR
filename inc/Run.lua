@@ -253,27 +253,31 @@ elseif redis:sismember(CZAR..':SUDO_BOT:',msg.sender_user_id_) then
 msg.TheRankCmd = 'المطور 👨🏽‍💻'
 msg.TheRank = 'مطور البوت 👨🏽‍💻'
 msg.Rank = 2
+elseif msg.GroupActive and redis:sismember(CZAR..':MALK_GR:'..msg.chat_id_,msg.sender_user_id_) then 
+msg.TheRankCmd = 'المالك 👨‍💼'
+msg.TheRank = 'المالك 👨‍💼 '
+msg.Rank = 3
 elseif msg.GroupActive and redis:sismember(CZAR..':KARA_BOT:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRankCmd = 'المنشىء الاساسي👷🏽'
 msg.TheRank = 'المنشىء الاساسي👷🏽 '
-msg.Rank = 3
+msg.Rank = 4
 elseif msg.GroupActive and redis:sismember(CZAR..':MONSHA_BOT:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRankCmd = 'المنشىء 👷🏽'
 msg.TheRank = 'المنشىء 👷🏽'
-msg.Rank = 4
+msg.Rank = 5
 elseif msg.GroupActive and redis:sismember(CZAR..'owners:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRankCmd = 'المدير 👨🏼‍⚕️' 
 msg.TheRank = 'مدير البوت 👨🏼‍⚕️' 
-msg.Rank = 5
+msg.Rank = 6
 elseif msg.GroupActive and redis:sismember(CZAR..'admins:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRankCmd = 'الادمن 👨🏼‍🎓'
 msg.TheRank = 'ادمن في البوت 👨🏼‍🎓'
-msg.Rank = 6
+msg.Rank = 7
 elseif msg.GroupActive and redis:sismember(CZAR..'whitelist:'..msg.chat_id_,msg.sender_user_id_) then 
 msg.TheRank = 'عضو مميز ⭐️'
-msg.Rank = 7
-elseif msg.sender_user_id_ == our_id then
 msg.Rank = 8
+elseif msg.sender_user_id_ == our_id then
+msg.Rank = 9
 else
 msg.TheRank = 'فقط عضو 🙍🏼‍♂️'
 msg.Rank = 11
@@ -288,26 +292,30 @@ msg.SudoUser = true
 end
 
 if msg.Rank == 1 or msg.Rank == 2 or msg.Rank == 3 then
-msg.Kara = true
+msg.malk = true
 end
 
 if msg.Rank == 1 or msg.Rank == 2 or msg.Rank == 3 or msg.Rank == 4 then
-msg.Creator = true
+msg.Kara = true
 end
 
 if msg.Rank == 1 or msg.Rank == 2 or msg.Rank == 3 or msg.Rank == 4 or msg.Rank == 5 then
-msg.Director = true
+msg.Creator = true
 end
 
 if msg.Rank == 1 or msg.Rank == 2 or msg.Rank == 3 or msg.Rank == 4 or msg.Rank == 5 or msg.Rank == 6 then
+msg.Director = true
+end
+
+if msg.Rank == 1 or msg.Rank == 2 or msg.Rank == 3 or msg.Rank == 4 or msg.Rank == 5 or msg.Rank == 6 or msg.Rank == 7 then
 msg.Admin = true
 end
 
-if msg.Rank == 7 then
+if msg.Rank == 8 then
 msg.Special = true
 end
 
-if msg.Rank == 8 then
+if msg.Rank == 9 then
 msg.OurBot = true
 end
 
