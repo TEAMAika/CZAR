@@ -313,6 +313,34 @@ end
 end,{msg=msg})
 end
 
+function lock_mmno3(msg)
+if not msg.Admin then return "📪¦ هذا الامر يخص الادمنيه فقط  " end
+GetUserID(msg.sender_user_id_,function(arg,data)
+msg = arg.msg 
+local NameUser   = Hyper_Link_Name(data)
+if redis:get(CZAR.."lock_mmno3"..msg.chat_id_) then
+return sendMsg(msg.chat_id_,msg.id_,"🔒¦ تم بالتأكيد قفل الفشار    \n📮¦ بواسطه ⋙「 "..NameUser.." 」 " ) 
+else
+redis:set(CZAR.."lock_mmno3"..msg.chat_id_,true)
+return sendMsg(msg.chat_id_,msg.id_,"🔒¦ تم قفل الفشار بنجاح   \n📮¦ بواسطه ⋙「 "..NameUser.." 」 " ) 
+end
+end,{msg=msg})
+end
+
+function unlock_mmno3(msg)
+if not msg.Admin then return "📪¦ هذا الامر يخص الادمنيه فقط  " end
+GetUserID(msg.sender_user_id_,function(arg,data)
+msg = arg.msg 
+local NameUser   = Hyper_Link_Name(data)
+if not redis:get(CZAR.."lock_mmno3"..msg.chat_id_) then
+return sendMsg(msg.chat_id_,msg.id_,"🔓¦ تم بالتأكيد فتح الفشار    \n📮¦ بواسطه ⋙「 "..NameUser.." 」 " ) 
+else 
+redis:del(CZAR.."lock_mmno3"..msg.chat_id_)
+return sendMsg(msg.chat_id_,msg.id_,"🔓¦ تم فتح الفشار بنجاح   \n📮¦ بواسطه ⋙「 "..NameUser.." 」 " ) 
+end
+end,{msg=msg})
+end
+
 
 ---------------Lock idediit------------------- 
 function unlock_idediit(msg)
