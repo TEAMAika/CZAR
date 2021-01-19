@@ -1483,7 +1483,7 @@ if Kleshaidinfo then
 local points = redis:get(CZAR..':User_Points:'..msg.chat_id_..msg.sender_user_id_) or 0
 KleshaID = Kleshaidinfo:gsub("{الاسم}",Namei)
 KleshaID = KleshaID:gsub("{الايدي}",msg.sender_user_id_)
-KleshaID = KleshaID:gsub("{المعرف}",UserNameID)
+KleshaID = KleshaID:gsub("{المعرف}",UserNameID1)
 KleshaID = KleshaID:gsub("{الرتبه}",msg.TheRank)
 KleshaID = KleshaID:gsub("{التفاعل}",Get_Ttl(msgs))
 KleshaID = KleshaID:gsub("{الرسائل}",msgs)
@@ -2058,6 +2058,18 @@ if not msg.SudoBase then return"♦️*│*هذا الامر يخص {المطو�
 return unlock_twasel(msg) 
 end
 
+if MsgText[1] == 'مسح كليشه الايدي' or MsgText[1] == 'مسح الايدي' or MsgText[1] == 'مسح ايدي'  or MsgText[1] == 'مسح كليشة الايدي'  then 
+if not msg.Creator then return "📪¦ هذا الامر يخص {منشئ اساسي,المنشئ,المطور} فقط  \n" end
+redis:del(boss..":infoiduser_public:"..msg.chat_id_)
+sendMsg(msg.chat_id_,msg.id_,"📛*¦* تم مسح كليشة الايدي بنجاح \n❕")
+end
+
+if MsgText[1] == 'تعيين كليشه الايدي' or MsgText[1] == 'تعيين الايدي' or MsgText[1] == 'تعيين ايدي'  or MsgText[1] == 'تعيين كليشة الايدي'  then 
+if not msg.Creator then return "📪¦ هذا الامر يخص {منشئ اساسي,المنشئ,المطور} فقط  \n" end
+redis:setex(CZAR..":Witting_KleshaID_public"..msg.chat_id_..msg.sender_user_id_,1000,true)
+return '📮*¦* حسننا , الان ارسل كليشه الايدي الجديده \n علما ان الاختصارات كالاتي : \n \n{الاسم} : لوضع اسم المستخدم\n{الايدي} : لوضع ايدي المستخدم\n{المعرف} : لوضع معرف المستخدم \n{الرتبه} : لوضع نوع رتبه المستخدم \n{التفاعل} : لوضع تفاعل المستخدم \n{الرسائل} : لاضهار عدد الرسائل \n{النقاط} : لاضهار عدد النقاط \n{التعديل} : لاضهار عدد السحكات \n{البوت} : لاضهار اسم البوت\n{المطور} : لاضهار معرف المطور الاساسي\n قناه تعليمات ونشر كلايش الايدي \n قناه الكلايش : [@Change_id] \n➼' 
+end
+
 if MsgText[1] == 'مسح كليشه الايدي عام' or MsgText[1] == 'مسح الايدي عام' or MsgText[1] == 'مسح ايدي عام'  or MsgText[1] == 'مسح كليشة الايدي عام' or MsgText[1] == 'مسح كليشه الايدي عام 🗑' then 
 if not msg.SudoUser then return "📪¦ هذا الامر يخص {المطور} فقط  \n" end
 if not msg.SudoBase and not redis:get(CZAR.."lockidedit") then return "📛*¦* الامر معطل من قبل المطور الاساسي  \n" end
@@ -2141,6 +2153,12 @@ end
 
 if MsgText[1] == 'اصدار السورس' or MsgText[1] == 'الاصدار' then
 return '👨🏾‍🔧│ اصدار سورس مـاكـس : *v'..version..'* \n📡'
+end
+
+if (MsgText[1]== "مسح المشتركين") then
+if not msg.SudoBase then return"📪¦ هذا الامر يخص {المطور الاساسي} فقط  \n" end
+redis:del(CZAR..'users')
+return 'تم مسح المشتركين\n📡'
 end
 
 if (MsgText[1] == 'تحديث السورس' or MsgText[1] == 'تحديث السورس 🔂') then
@@ -3256,43 +3274,6 @@ if msg.text then
 --====================== Requst UserName Of Channel For ForceSub ==============
 local Text = msg.text
 local UserID =  msg.sender_user_id_
-if msg.Creator then
-if Text == "تعيين الايدي" and msg.SudoUser then
-redis:setex("CHENG:ID"..msg.chat_id_..""..msg.sender_user_id_,200,true)  
-local hasnid= [[
-*🚸¦ اهلابك عزيزي  
-🎫¦تستطيع الان تغير كليشه الايدي 📣
----------------------
- •  الايدي •* `IDGET`
-*• رتبتي • * `RTBGET`
-*• المعرف • * `USERGET`
-*• رسائلك • * `MSGGET`
-*•سحكاتك • * `edited`
-*• تفاعلك • * `TFGET`
-*• جهاتك • * `adduser`
-*•مجوهراتك • * `User_Points`
-
-]]
-return sendMsg(msg.chat_id_,msg.id_,hasnid) 
-end
-if Text == "مسح الايدي" and msg.SudoUser then
-redis:del("KLISH:ID")
-sendMsg(msg.chat_id_,msg.id_,"🙋🏼‍♂️*¦* أهلا عزيزي "..msg.TheRankCmd.."\n📡*¦* تم  حذف كليشه الايدي \n✓")
-return false  
-end
-if redis:get("CHENG:ID"..msg.chat_id_..""..msg.sender_user_id_) then 
-if Text == "الغاء" then 
-sendMsg(msg.chat_id_,msg.id_,"*📣¦ تم الغاء الامر *\n✓")
-redis:del("CHENG:ID"..msg.chat_id_..""..msg.sender_user_id_) 
-return false
-end 
-redis:del("CHENG:ID"..msg.chat_id_..""..msg.sender_user_id_) 
-local CHENGER_ID = Text:match("(.*)")  
-redis:set("KLISH:ID",CHENGER_ID)
-sendMsg(msg.chat_id_,msg.id_,'\n*🏌️‍♀️¦ تم تغير كليشه الايدي بنجاح*\n')
-end
-
-end
 
 if msg.content_.ID == "MessageChatAddMembers" then  
 redis:set(CZAR.."Who:Added:Me"..msg.chat_id_..':'..msg.content_.members_[0].id_,msg.sender_user_id_)
@@ -3532,6 +3513,13 @@ end)
 end
 sendMsg(msg.chat_id_,msg.id_,'📑*¦* عدد المجموعات •⊱ { *'..#groups..'*  } ⊰•\n🗣*¦* تـم الاذاعه بالتثبيت بنجاح ✓')
 end 
+
+if msg.Creator and redis:get(CZAR..":Witting_KleshaID_public"..msg.chat_id_..msg.sender_user_id_) then 
+redis:del(CZAR..":Witting_KleshaID_public"..msg.chat_id_..msg.sender_user_id_)
+redis:set(CZAR..":infoiduser_public:"..msg.chat_id_,msg.text)
+sendMsg(msg.chat_id_,msg.id_,"🔖¦ تم تعيين كليشة الايدي بنجاح \n📮¦ يمكنك تجربة الامر الان ")
+return false
+end
 
 if msg.SudoUser and redis:get(CZAR..":Witting_KleshaID"..msg.chat_id_..msg.sender_user_id_) then 
 redis:del(CZAR..":Witting_KleshaID"..msg.chat_id_..msg.sender_user_id_)
@@ -5274,11 +5262,24 @@ CZAR = {
 "^(تعيين الايدي عام)$",
 "^(تعين الايدي عام)$",
 "^(تعيين ايدي عام)$",
+"^(تعيين كليشه الايدي)$",
+"^(تعيين كليشة الايدي)$",
+"^(تعيين الايدي)$",
+"^(مسح كليشه الايدي)$", 
+"^(مسح الايدي)$", 
+"^(مسح ايدي)$", 
+"^(مسح كليشة الايدي)$", 
+"^(مسح كليشه الايدي عام)$", 
+"^(مسح كليشه الايدي عام 🗑)$", 
+"^(مسح الايدي عام)$", 
+"^(مسح ايدي عام)$", 
+"^(مسح كليشة الايدي عام)$", 
 "^(تعطيل تعيين الايدي)$",
 "^(تعطيل تعيين الايدي ⚔️)$",
 "^(تفعيل تعيين الايدي)$",
 "^(تفعيل تعيين الايدي ⌨️)$",
 "^(اذاعه بالتثبيت)$", 
+"^(مسح المشتركين)$", 
 
 
 
