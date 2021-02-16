@@ -2063,7 +2063,7 @@ end
 
 if MsgText[1] == 'مسح كليشه الايدي' or MsgText[1] == 'مسح الايدي' or MsgText[1] == 'مسح ايدي'  or MsgText[1] == 'مسح كليشة الايدي'  then 
 if not msg.Creator then return "📪¦ هذا الامر يخص {منشئ اساسي,المنشئ,المطور} فقط  \n" end
-redis:del(CZAR..":infoiduser_public:"..msg.chat_id_)
+redis:del(boss..":infoiduser_public:"..msg.chat_id_)
 sendMsg(msg.chat_id_,msg.id_,"📛*¦* تم مسح كليشة الايدي بنجاح \n❕")
 end
 
@@ -4551,11 +4551,7 @@ end,{msg=msg})
 
 ------------------------------{ Start Replay Send }------------------------
 
-
-
-end
-
-if msg.text and redis:get(CZAR.."lock_rdodSource"..msg.chat_id_) then
+if not Replay then
 
 --================================{{  Reply Bot  }} ===================================
 
