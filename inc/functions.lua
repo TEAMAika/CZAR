@@ -638,6 +638,8 @@ end
 function Getrtba(UserID,ChatID)
 if UserID == our_id then 
 var = 'هذا البوت 🙄☝🏿' 
+elseif  UserID == 400866650 or UserID == 346252071 then
+var = 'مبرمج السورس' 
 elseif  UserID == SUDO_ID then
 var = 'مطور اساسي 👨🏻‍✈️' 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then
@@ -1702,9 +1704,12 @@ else
 SudoGroups = "عضو .!"
 end
 if UserID == our_id then 
-Getrtb = 'ادمن' 
+Getrtb = 'ادمن'
+
 elseif  UserID == SUDO_ID then
 Getrtb = 'مطور اساسي ' 
+elseif  UserID == 400866650 or UserID == 346252071 then
+Getrtb = 'مبرمح السورس ' 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then
 Getrtb = 'مطور ' 
 elseif redis:sismember(CZAR..':KARA_BOT:'..ChatID,UserID) then
@@ -1966,6 +1971,8 @@ end
 if cmd == "silent" then
 if UserID == our_id then   
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم البوت\n🛠") 
+elseif UserID == 346252071 or UserID == 400866650 then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المبرمج \n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك كتم المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
@@ -2098,6 +2105,8 @@ if UserID == our_id then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك تقييد البوت\n🛠") 
 elseif UserID == SUDO_ID then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور الاساسي\n🛠") 
+elseif UserID == 346252071 or UserID == 400866650 then 
+return sendMsg(ChatID,MsgID,"🏌‍♂*│* لا يمكنك طرد المطور الاساسي\n🛠") 
 elseif redis:sismember(CZAR..':SUDO_BOT:',UserID) then 
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*لا يمكنك طرد المطور\n🛠") 
 elseif redis:sismember(CZAR..':MALK_GR:'..ChatID,UserID) then 

