@@ -783,9 +783,9 @@ send_msg(msg.chat_id_,message,msg.id_)
 return false
 end
 
---================================{{  List Constructor  }} ===================================
+--================================{{  List Hussainlist  }} ===================================
 
-function GetListHussainlist(msg)
+function Hussainlist(msg)
 local message = '*♦️│ المنشئيين الاساسين :*\n\n'
 local monsha = redis:smembers(CZAR..':KARA_BOT:'..msg.chat_id_)
 if #monsha == 0 then 
@@ -1880,7 +1880,7 @@ elseif data.type_.ID == "ChannelChatInfo" then
 return sendMsg(ChatID,MsgID,"🏌‍♂*│*عذرا لا يمكن رفع قناة في البوت \n📛") 
 end
 if redis:sismember(CZAR..'admins:'..ChatID,UserID) then 
-return sendMsg(ChatID,MsgID,'🏌‍♂*╿*العضو » ❪ '..UserName..' ❫\n🎟*│*الايدي » ❪ `'..UserID..'` ❫\n💯*╽*انه بالتأكيد ادمن \n✓️') 
+return sendMsg(ChatID,MsgID,'🏌‍♂*╿*العضو » ❪ '..UserName..' ❫\n🎟*│*الايدي » ❪ `'..UserID..'` ❫\n??*╽*انه بالتأكيد ادمن \n✓️') 
 end
 redis:hset(CZAR..'username:'..UserID, 'username', UserName)
 redis:sadd(CZAR..'admins:'..ChatID,UserID)
