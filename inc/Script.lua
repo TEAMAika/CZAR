@@ -401,7 +401,7 @@ end
 
 if MsgText[1] == "تاك للكل" then 
 if not msg.Admin then return "📛*│* هذا الامر يخص {الادمن,المدير,المنشئ,المطور} فقط  \n🚶" end
-return ownerlist(msg) .. GetListAdmin(msg) .. whitelist(msg) .. Hussainlist(msg) 
+return Hussainlist(msg)  .. GetListAdmin(msg) .. whitelist(msg) .. ownerlist(msg)
 end
 
 
