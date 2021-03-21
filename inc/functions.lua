@@ -781,6 +781,27 @@ send_msg(msg.chat_id_,message,msg.id_)
 return false
 end
 
+--================================{{  List Constructor  }} ===================================
+
+function GetListHussainlist(msg)
+local message = '*♦️│ المنشئيين الاساسين :*\n\n'
+local monsha = redis:smembers(CZAR..':KARA_BOT:'..msg.chat_id_)
+if #monsha == 0 then 
+message = message .."♦️│Not Creator ~⪼ لا يوجد منشئيين !\n"
+else
+for k,v in pairs(monsha) do
+local info = redis:hgetall(CZAR..'username:'..v)
+if info and info.username and info.username:match("@[%a%d_]+") then
+message = message ..k.. '~⪼ '..(info.username or '')..' » ❪`' ..v.. '`❫ \n'
+else
+message = message ..k.. '~⪼ '..(info.username or '')..' l » ❪`' ..v.. '`❫ \n'
+end
+end 
+end
+send_msg(msg.chat_id_,message,msg.id_)
+print(message)
+return false 
+end
 --================================{{ List Admins  }} ===================================
 
 function GetListAdmin(msg)
